@@ -113,8 +113,8 @@ int main()
     std::cout << "List from tail to head: ";
     carList.printFromTailToHead();
 
-    std::cout << "List from Lexus to tail: ";
-    carList.printFromCarToEnd("Lexus");
+    std::cout << "List from Hyundai to tail: ";
+    carList.printFromCarToEnd("Hyundai");
 
     carList.sortAlphabetically();
     std::cout << "List in alphabetical order: ";
