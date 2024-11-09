@@ -16,10 +16,6 @@ struc Node
 endstruc
 
 main:
-    ; Implementation of main function in assembly
-    ; Due to the complexity of translating the entire C++ code to assembly,
-    ; a full implementation is not provided here. Please be warned.
-    ret
     ; Set up stack frame
     push ebp
     mov ebp, esp
