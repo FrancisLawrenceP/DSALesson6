@@ -3,6 +3,8 @@ section .data
     new_line db 0x0A, 0
 
 section .bss
+    head resd 1
+    tail resd 1
 
 section .text
     global main
@@ -14,6 +16,8 @@ struc Node
     .next resd 1
     .prev resd 1
 endstruc
+
+Node_size equ 12
 
 main:
     ; Set up stack frame
@@ -64,12 +68,40 @@ append_loop:
     mov [esi + Node.prev], eax
 
     ; Append node to list
+    push esi
+    call append_node
+    add esp, 4
+
+    inc ecx
+    jmp append_loop
+
+append_done:
+
+    ; Print list from head to tail
+    call print_list
+
+    ; Print newline
+    push new_line
+    call printf
+    add esp, 4
+
+    ; Clean up stack frame
+    mov esp, ebp
+    pop ebp
+    ret
+
+append_node:
+    ; Append node to list
+    push ebp
+    mov ebp, esp
+    mov esi, [ebp + 8]  ; esi = new node
+
     cmp dword [head], 0
     jne not_first_node
     ; First node
     mov [head], esi
     mov [tail], esi
-    jmp append_continue
+    jmp append_done
 
 not_first_node:
     mov edi, [tail]
@@ -77,13 +109,16 @@ not_first_node:
     mov [esi + Node.prev], edi
     mov [tail], esi
 
-append_continue:
-    inc ecx
-    jmp append_loop
-
 append_done:
+    mov esp, ebp
+    pop ebp
+    ret
 
+print_list:
     ; Print list from head to tail
+    push ebp
+    mov ebp, esp
+
     mov esi, [head]
 
 print_loop:
@@ -97,12 +132,6 @@ print_loop:
     jmp print_loop
 
 print_done:
-    ; Print newline
-    push new_line
-    call printf
-    add esp, 4
-
-    ; Clean up stack frame
     mov esp, ebp
     pop ebp
     ret
